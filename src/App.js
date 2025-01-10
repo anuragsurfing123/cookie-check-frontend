@@ -4,7 +4,7 @@ function App() {
   const [response, setResponse] = useState('');
 
   const handleButtonClick = async () => {
-    const apiUrl = 'https://cookie-check-production.up.railway.app/get-cookie'; // Replace with your backend API URL
+    const apiUrl = 'https://cookie-check-production.up.railway.app/set-cookie'; // Replace with your backend API URL
 
     try {
       const res = await fetch(apiUrl, {
