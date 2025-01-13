@@ -77,17 +77,13 @@ const client = new ApolloClient({
 
 const SET_COOKIE_MUTATION = gql`
   mutation SetCookie {
-    setCookie {
-      message
-    }
+    setCookie
   }
 `;
 
 const GET_COOKIE_QUERY = gql`
   query GetCookie {
-    getCookie {
-      cookieValue
-    }
+    getCookie
   }
 `;
 
@@ -104,22 +100,27 @@ function App() {
     }
   });
 
-  const { data, error } = useQuery(GET_COOKIE_QUERY, {
+  const { data, error, refetch } = useQuery(GET_COOKIE_QUERY, {
     onCompleted: (data) => {
       setGetResponse(`Response: ${JSON.stringify(data)}`);
     },
     onError: (error) => {
       setGetResponse(`Error: ${error.message}`);
-    }
+    },
+    skip: true, // Prevent auto-fetch when the component mounts
   });
 
   const handleSetCookie = () => {
     setCookie();
   };
 
-  const handleGetCookie = () => {
-    // The data is automatically fetched by the useQuery hook
-    if (error) {
+  const handleGetCookie = async () => {
+    try {
+      await refetch(); // Manually trigger the network call to get the cookie
+      if (data) {
+        setGetResponse(`Response: ${JSON.stringify(data)}`);
+      }
+    } catch (error) {
       setGetResponse(`Error: ${error.message}`);
     }
   };
@@ -142,3 +143,4 @@ export default function AppWrapper() {
     </ApolloProvider>
   );
 }
+
